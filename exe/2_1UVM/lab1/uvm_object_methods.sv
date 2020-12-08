@@ -17,6 +17,10 @@ package object_methods_pkg;
       //  `uvm_field_enum(T, ARG, FLAG)
       //  `uvm_field_string(ARG, FLAG)
       //to register all of member variables
+        `uvm_field_int(addr, UVM_ALL_ON)
+        `uvm_field_int(data, UVM_ALL_ON)
+        `uvm_field_enum(op_t, op, UVM_ALL_ON)
+        `uvm_field_string(name, UVM_ALL_ON)
     `uvm_object_utils_end
     function new(string name = "trans");
       super.new(name);
@@ -26,6 +30,25 @@ package object_methods_pkg;
       //TODO-2.4
       //Please just try to compare all of properties of the two properties
       //and give detailed comparison messages
+      trans t;
+      do_compare = 1;
+      void'($cast(t, rhs));
+      if(addr != t.addr) begin
+        do_compare = 0;
+        `uvm_warning("CMPERR", $sformatf("addr %8x != %8x", addr, t.addr))
+      end
+      if(data != t.data) begin
+        do_compare = 0;
+        `uvm_warning("CMPERR", $sformatf("data %8x != %8x", data, t.data))
+      end
+      if(op != t.op) begin
+        do_compare = 0;
+        `uvm_warning("CMPERR", $sformatf("op %s != %s", op, t.op))
+      end
+      if(name != t.name) begin
+        do_compare = 0;
+        `uvm_warning("CMPERR", $sformatf("name %s != %s", name, t.name))
+      end
     endfunction
   endclass
 
@@ -55,22 +78,40 @@ package object_methods_pkg;
       //TODO-2.2 
       //Use function bit compare (uvm_object rhs, uvm_comparer comparer=null)
       //to compare t1 and t2, and check the message output
-      
+      is_equal = t1.compare(t2);
+
       //TODO-2.3
       //uvm_default_comparer (uvm_comparer type) is the default UVM global comparer, 
       //you would set its property like 'show_max' to ask more of the comparison result
       //Please set this property and do the compare again
+      uvm_default_comparer.show_max = 10;
+      is_equal = t1.compare(t2);
+      
+      if(!is_equal)
+        `uvm_warning("CMPERR", "t1 is not equal to t2")
+      else
+        `uvm_info("CMPERR", "t1 is equal to t2", UVM_LOW)
 
-        
       `uvm_info("COPY", "Before uvm_object copy() taken", UVM_LOW)
       //TODO-2.5
       //Use uvm_object::print() method to display all of fields before copy()
-      
+      t1.print();
+      t2.print();
       `uvm_info("COPY", "After uvm_object t2 is copied to t1", UVM_LOW)
       //TODO-2.6
       //Call uvm_object::copy(uvm_object rhs) to copy t2 to t1
       //and use print() and compare() to follow steps above again for them
-   
+      t1.copy(t2);
+      t1.print();
+      t2.print();
+      `uvm_info("CMP", "Compare t1 and t2", UVM_LOW)
+      is_equal = t1.compare(t2);
+      if(!is_equal)
+        `uvm_warning("CMPERR", "t1 is not equal to t2")
+      else
+        `uvm_info("CMPERR", "t1 is equal to t2", UVM_LOW)       
+      
+      #1us;
       phase.drop_objection(this);
     endtask
   endclass

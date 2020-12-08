@@ -15,7 +15,27 @@ package phase_order_pkg;
     // - connect_phase()
     // - run_phase()
     // - report_phase()
-  endclass
+    function void build_phase(uvm_phase phase);
+      super.build_phase(phase);
+      `uvm_info("BUILD", "comp2 build phase entered", UVM_LOW)
+      `uvm_info("BUILD", "comp2 build phase exited", UVM_LOW)
+    endfunction
+    function void connect_phase(uvm_phase phase);
+      super.connect_phase(phase);
+      `uvm_info("CONNECT", "comp2 connect phase entered", UVM_LOW)
+      `uvm_info("CONNECT", "comp2 connect phase exited", UVM_LOW)
+    endfunction
+    task run_phase(uvm_phase phase);
+      super.run_phase(phase);
+      `uvm_info("RUN", "comp2 run phase entered", UVM_LOW)
+      `uvm_info("RUN", "comp2 run phase entered", UVM_LOW)
+    endtask
+    function void report_phase(uvm_phase phase);
+      super.report_phase(phase);
+      `uvm_info("REPORT", "comp2 report phase entered", UVM_LOW)
+      `uvm_info("REPORT", "comp2 report phase exited", UVM_LOW) 
+    endfunction
+      endclass
   
   class comp3 extends uvm_component;
     `uvm_component_utils(comp3)
@@ -29,6 +49,26 @@ package phase_order_pkg;
     // - connect_phase()
     // - run_phase()
     // - report_phase()
+    function void build_phase(uvm_phase phase);
+      super.build_phase(phase);
+      `uvm_info("BUILD", "comp3 build phase entered", UVM_LOW)
+      `uvm_info("BUILD", "comp3 build phase exited", UVM_LOW)
+    endfunction
+    function void connect_phase(uvm_phase phase);
+      super.connect_phase(phase);
+      `uvm_info("CONNECT", "comp3 connect phase entered", UVM_LOW)
+      `uvm_info("CONNECT", "comp3 connect phase exited", UVM_LOW)
+    endfunction
+    task run_phase(uvm_phase phase);
+      super.run_phase(phase);
+      `uvm_info("RUN", "comp3 run phase entered", UVM_LOW)
+      `uvm_info("RUN", "comp3 run phase entered", UVM_LOW)
+    endtask
+    function void report_phase(uvm_phase phase);
+      super.report_phase(phase);
+      `uvm_info("REPORT", "comp3 report phase entered", UVM_LOW)
+      `uvm_info("REPORT", "comp3 report phase exited", UVM_LOW)   
+    endfunction
   endclass
   
   class comp1 extends uvm_component;
@@ -84,7 +124,7 @@ package phase_order_pkg;
       super.run_phase(phase);
       `uvm_info("RUN", "phase_order_test run phase entered", UVM_LOW)
       phase.raise_objection(this);
-      #1us;
+      #6us;
       phase.drop_objection(this);
       `uvm_info("RUN", "phase_order_test run phase exited", UVM_LOW)
     endtask
@@ -99,7 +139,21 @@ package phase_order_pkg;
     // - reset_phase()
     // - main_phase()
     //Ask each task to be finished within 1us
-
+    task reset_phase(uvm_phase phase);
+      `uvm_info("RESET", "phase_order_test reset phase entered", UVM_LOW)
+      phase.raise_objection(this);
+      #1us;
+      phase.drop_objection(this);
+      `uvm_info("RESET", "phase_order_test reset phase exited", UVM_LOW)
+    endtask
+    
+    task main_phase(uvm_phase phase);
+      `uvm_info("MAIN", "phase_order_test main phase entered", UVM_LOW)
+      phase.raise_objection(this);
+      #1us;
+      phase.drop_objection(this);
+      `uvm_info("MAIN", "phase_order_test main phase exited", UVM_LOW)
+    endtask 
   endclass
 endpackage
 

@@ -73,6 +73,9 @@ package factory_pkg;
       // create t4 with method create_object(...) as below
       // function uvm_object create_object (string requested_type_name,
       //                                    string name="");
+      t2 = trans::type_id::create("t2", this); // common method
+      void'($cast(t3,f.create_object_by_type(trans::get_type(), get_full_name(), "t3"))); // factory method
+      void'($cast(t4,create_object("trans", "t4"))); // pre-defined method inside component
     endfunction
   endclass
 
@@ -87,6 +90,8 @@ package factory_pkg;
       //                              (uvm_object_wrapper original_type, 
       //                               uvm_object_wrapper override_type,
       //                               bit replace=1)
+      set_type_override_by_type(trans::get_type(), bad_trans::get_type());
+      super.build_phase(phase);
     endfunction
   endclass
 
@@ -111,6 +116,12 @@ package factory_pkg;
       // create u4 with method create_component(...) as below
       // function uvm_component create_component (string requested_type_name, 
       //                                          string name)
+    //  u2 = unit::type_id::create("u2", this);
+    //  void'($cast(u3, f.create_component_by_type(unit::get_type, get_full_name(), "u3", this)));
+    //  void'($cast(u4, create_component("unit", "u4")));
+      u2 = unit::type_id::create("u2", this); // common method
+      void'($cast(u3,f.create_component_by_type(unit::get_type(), get_full_name(), "u3", this))); // factory method
+      void'($cast(u4,create_component("unit", "u4"))); // pre-defined method inside component
     endfunction
   endclass
 
@@ -124,6 +135,8 @@ package factory_pkg;
       // function void set_type_override(string original_type_name, 
       //                                 string override_type_name,
       //                                 bit    replace=1);
+      set_type_override("unit", "big_unit");
+      super.build_phase(phase);
     endfunction
   endclass
   

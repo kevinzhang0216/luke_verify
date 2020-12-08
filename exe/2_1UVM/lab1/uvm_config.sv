@@ -33,14 +33,17 @@ package uvm_config_pkg;
       `uvm_info("BUILD", "comp2 build phase entered", UVM_LOW)
       //TODO-4.1
       //Please get the interface and check if it is got
-        
+        if(!uvm_config_db#(virtual uvm_config_if)::get(this, "", "vif", vif))
+          `uvm_error("GETVIF", "no virtual interface is assigned")
       `uvm_info("GETINT", $sformatf("before config get, var2 = %0d", var2), UVM_LOW)
       //TODO-4.3
       //Please get the var2 from config_db
+      uvm_config_db#(int)::get(this, "", "var2", var2);
       `uvm_info("GETINT", $sformatf("after config get, var2 = %0d", var2), UVM_LOW)
       
       //TODO-4.2
       //Please get the config object
+      uvm_config_db#(config_obj)::get(this, "", "cfg", cfg);
       `uvm_info("GETOBJ", $sformatf("after config get, cfg.comp2_var = %0d", cfg.comp2_var), UVM_LOW)     
       
       `uvm_info("BUILD", "comp2 build phase exited", UVM_LOW)
@@ -63,14 +66,18 @@ package uvm_config_pkg;
       `uvm_info("BUILD", "comp1 build phase entered", UVM_LOW)
       //TODO-4.1
       //Please get the interface and check if it is got
-        
+      if(!uvm_config_db#(virtual uvm_config_if)::get(this, "", "vif", vif))
+        `uvm_error("GETVIF", "no virtual interface is assigned")
+
       `uvm_info("GETINT", $sformatf("before config get, var1 = %0d", var1), UVM_LOW)
       //TODO-4.3
       //Please get the var1 from config_db
+      uvm_config_db#(int)::get(this, "", "var1", var1);
       `uvm_info("GETINT", $sformatf("after config get, var1 = %0d", var1), UVM_LOW)
       
       //TODO-4.2
       //Please get the config object
+      uvm_config_db#(config_obj)::get(this, "", "cfg", cfg);
       `uvm_info("GETOBJ", $sformatf("after config get, cfg.comp1_var = %0d", cfg.comp1_var), UVM_LOW)
       
       c2 = comp2::type_id::create("c2", this);
@@ -92,14 +99,18 @@ package uvm_config_pkg;
       cfg = config_obj::type_id::create("cfg");
       cfg.comp1_var = 100;
       cfg.comp2_var = 200;
-      //TODO-4.2
-      //Please config the object to c1 and c2 by config_db
-      
-      //TODO-4.3
-      //Please config the c1.var1=20, c2.var2=20 by config_db
-      
       c1 = comp1::type_id::create("c1", this);
       `uvm_info("BUILD", "uvm_config_test build phase exited", UVM_LOW)
+      //TODO-4.2
+      //Please config the object to c1 and c2 by config_db
+      uvm_config_db#(config_obj)::set(this, "*", "cfg", cfg);
+      //TODO-4.3
+      //Please config the c1.var1=20, c2.var2=20 by config_db
+      uvm_config_db#(int)::set(this, "c1", "var1", 10);
+      uvm_config_db#(int)::set(this, "c1.c2", "var2", 20);
+      
+    //  c1 = comp1::type_id::create("c1", this);
+    //  `uvm_info("BUILD", "uvm_config_test build phase exited", UVM_LOW)
     endfunction
     task run_phase(uvm_phase phase);
       super.run_phase(phase);
@@ -123,6 +134,7 @@ module uvm_config;
   //TODO-4.1
   //Please set interface to the c1 and c2 in the environment
   initial begin
+    uvm_config_db#(virtual uvm_config_if)::set(uvm_root::get(), "uvm_test_top.*", "vif", if0);
     run_test(""); // empty test name
   end
 

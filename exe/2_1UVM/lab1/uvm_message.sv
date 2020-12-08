@@ -49,15 +49,22 @@ package uvm_message_pkg;
       //TODO-5.1
       //Use set_report_verbosity_level_hier() to disable all of UVM messages
       //under the uvm_message_test
+      //set_report_verbosity_level_hier(UVM_NONE);
       
       //TODO-5.2
       //Use set_report_id_verbosity_level_hier() to disable all of 
       //'BUILD', "CREATE", “RUN” ID message under the uvm_message_test
+      //set_report_id_verbosity_hier("BUILD", UVM_NONE);
+      //set_report_id_verbosity_hier("CREATE", UVM_NONE);
+      //set_report_id_verbosity_hier("RUN", UVM_NONE);
       
       //TODO-5.3
       //Why the UVM message from config_obj type and uvm_message module
       //could not be disabled? Please use the message filter methods
       //to disable them
+      uvm_root::get().set_report_id_verbosity_hier("CREATE", UVM_NONE);
+      uvm_root::get().set_report_id_verbosity_hier("BUILD", UVM_NONE);
+      uvm_root::get().set_report_id_verbosity_hier("RUN", UVM_NONE);
       
       `uvm_info("BUILD", "uvm_message_test build phase entered", UVM_LOW)
       cfg = config_obj::type_id::create("cfg");
@@ -84,7 +91,7 @@ module uvm_message;
     //Why the UVM message from config_obj type and uvm_message module
     //could not be disabled? Please use the message filter methods
     //to disable them
-    
+     uvm_root::get().set_report_id_verbosity_hier("TOPTB", UVM_NONE);
     `uvm_info("TOPTB", "RUN TEST entered", UVM_LOW)
     run_test(""); // empty test name
     `uvm_info("TOPTB", "RUN TEST exited", UVM_LOW)
